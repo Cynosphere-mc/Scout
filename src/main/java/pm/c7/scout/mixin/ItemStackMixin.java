@@ -14,9 +14,8 @@ public class ItemStackMixin {
     // Excluding ourselves from this check to force unequip/equip when switching bag items fixes a duplication bug
     // Gross and hacky but oh well, can't mixin mixins.
     @Inject(method = "areEqual", at = @At("HEAD"), cancellable = true)
-    private void scout$grossTrinketsEquipFix(ItemStack newStack, CallbackInfoReturnable<Boolean> callbackInfo) {
-        ItemStack self = (ItemStack) (Object) this;
-        if (self.getItem() instanceof BaseBagItem && newStack.getItem() instanceof BaseBagItem) {
+    private static void scout$grossTrinketsEquipFix(ItemStack stack, ItemStack otherStack, CallbackInfoReturnable<Boolean> callbackInfo) {
+        if (stack.getItem() instanceof BaseBagItem && otherStack.getItem() instanceof BaseBagItem) {
             callbackInfo.setReturnValue(false);
         }
     }

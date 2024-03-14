@@ -48,7 +48,8 @@ dependencies {
 
 	modImplementation libs.quilted.fabric.api
 
-	modApi include("dev.emi:trinkets:${libs.versions.trinkets.get()}")
+	// not JiJ because it causes its mixins to fail to load
+	modApi "dev.emi:trinkets:${libs.versions.trinkets.get()}"
 	modApi include("com.unascribed:lib39-core:${libs.versions.lib39.get()}+${libs.versions.minecraft.get()}")
 	modApi include("com.unascribed:lib39-dessicant:${libs.versions.lib39.get()}+${libs.versions.minecraft.get()}")
 

@@ -3,7 +3,6 @@ package pm.c7.scout.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
@@ -46,7 +45,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	@Shadow
 	protected int backgroundHeight;
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawBackground(Lnet/minecraft/client/util/math/MatrixStack;FII)V"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawBackground(Lnet/minecraft/client/gui/GuiGraphics;FII)V"))
 	private void scout$drawSatchelRow(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtil.isScreenBlacklisted(this)) {
 			ItemStack backStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.SATCHEL, false);
@@ -272,7 +271,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 		}
 	}
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/util/math/MatrixStack;II)V"))
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/GuiGraphics;II)V"))
 	public void scout$drawOurSlots(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtil.isScreenBlacklisted(this)) {
 			for (int i = ScoutUtil.SATCHEL_SLOT_START; i > ScoutUtil.BAG_SLOTS_END; i--) {
