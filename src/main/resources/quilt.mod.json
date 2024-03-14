@@ -56,16 +56,6 @@
 		],
 		"breaks": [
 			{
-				"id": "roughlyenoughitems",
-				"versions": "*",
-				"reason": "API constantly rewritten for no reason, arrogant mod author, features stolen from EMI."
-			},
-			{
-				"id": "inventoryprofilesnext",
-				"versions": "*",
-				"reason": "Crashes with no intent to fix on their end."
-			},
-			{
 				"id": "infinitory",
 				"versions": "*",
 				"reason": "Infinite/Incompatible inventory mod."
@@ -82,6 +72,16 @@
 			},
 			{
 				"id": "inventory_backpack",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			},
+			{
+				"id": "realistic-inventory",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			},
+			{
+				"id": "inventorymod",
 				"versions": "*",
 				"reason": "Infinite/Incompatible inventory mod."
 			}

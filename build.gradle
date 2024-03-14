@@ -57,10 +57,22 @@ dependencies {
 }
 
 processResources {
-	inputs.properties 'version': version, 'group': project.group
+	inputs.property 'version', version
+	inputs.property 'group', project.group
+	inputs.property 'minecraft_version', libs.versions.minecraft.get()
+	inputs.property 'trinkets_version', libs.versions.trinkets.get()
+	inputs.property 'lib39_version', libs.versions.lib39.get()
+	inputs.property 'emi_version', libs.versions.emi.get()
 
 	filesMatching('quilt.mod.json') {
-		expand 'version': version, 'group': project.group
+		expand (
+			"version": version,
+			"group": project.group,
+			"minecraft_version": libs.versions.minecraft.get(),
+			"trinkets_version": libs.versions.trinkets.get(),
+			"lib39_version": libs.versions.lib39.get(),
+			"emi_version": libs.versions.emi.get()
+		)
 	}
 }
 
