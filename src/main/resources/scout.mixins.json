@@ -1,0 +1,10 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "pm.c7.scout.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "pm.c7.scout.ScoutMixin",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

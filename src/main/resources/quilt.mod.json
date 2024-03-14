@@ -1,0 +1,91 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "pm.c7.scout",
+		"id": "scout",
+		"version": "${version}",
+		"metadata": {
+			"name": "Scout",
+			"description": "A mod focused on \"physically\" extending the inventory (adding slots) through wearing various types of bags.",
+			"contributors": {
+				"Cynosphere": "Owner, Developer",
+				"Kat": "Original pouch texture",
+				"makamys": "Original idea"
+			},
+			"contact": {
+				"sources": "https://gitdab.com/Cynosphere-mc/Scout"
+			},
+			"icon": "assets/scout/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": "pm.c7.scout.Scout",
+			"client_init": "pm.c7.scout.client.ScoutClient",
+			"emi": "pm.c7.scout.client.compat.ScoutEmiPlugin"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.17.0-"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": ">=4.0.0-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=${minecraft_version}"
+			},
+			{
+				"id": "trinkets",
+				"versions": ">=${trinkets_version}"
+			},
+			{
+				"id": "lib39-core",
+				"versions": ">=${lib39_version}"
+			},
+			{
+				"id": "lib39-dessicant",
+				"versions": ">=${lib39_version}"
+			},
+			{
+				"id": "emi",
+				"versions": ">=${emi_version}",
+				"optional": true
+			}
+		],
+		"breaks": [
+			{
+				"id": "roughlyenoughitems",
+				"versions": "*",
+				"reason": "API constantly rewritten for no reason, arrogant mod author, features stolen from EMI."
+			},
+			{
+				"id": "inventoryprofilesnext",
+				"versions": "*",
+				"reason": "Crashes with no intent to fix on their end."
+			},
+			{
+				"id": "infinitory",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			},
+			{
+				"id": "biginv",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			},
+			{
+				"id": "extrainv",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			},
+			{
+				"id": "inventory_backpack",
+				"versions": "*",
+				"reason": "Infinite/Incompatible inventory mod."
+			}
+		]
+	},
+	"mixin": "scout.mixins.json"
+}

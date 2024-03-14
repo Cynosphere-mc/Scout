@@ -1,0 +1,10 @@
+{
+  "recipes": [
+    "scout:tanned_leather",
+    "scout:pouch",
+    "scout:satchel_strap",
+    "scout:upgraded_pouch",
+    "scout:upgraded_satchel",
+    "scout:satchel"
+  ]
+}

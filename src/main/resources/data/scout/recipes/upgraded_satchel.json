@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smithing",
+  "lib39:discovered_via": "minecraft:diamond",
+  "base": {
+    "item": "scout:satchel"
+  },
+  "addition": {
+    "item": "minecraft:diamond"
+  },
+  "result": {
+    "item": "scout:upgraded_satchel"
+  }
+}

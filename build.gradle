@@ -1,0 +1,83 @@
+plugins {
+	alias libs.plugins.quilt.loom
+}
+
+base {
+	archivesName = project.archives_base_name
+}
+
+version = "$project.version+${libs.versions.minecraft.get()}"
+group = project.maven_group
+
+repositories {
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
+	maven {
+		name = "Ladysnake Libs"
+		url = "https://maven.ladysnake.org/releases"
+	}
+	maven {
+		name = "Sleeping Town"
+		url = "https://repo.sleeping.town"
+		content {
+			includeGroup "com.unascribed"
+		}
+	}
+}
+
+loom {
+	// Loom and Loader both use this block in order to gather more information about your mod.
+	mods {
+		// This should match your mod id.
+		"scout" {
+			// Tell Loom about each source set used by your mod here. This ensures that your mod's classes are properly transformed by Loader.
+			sourceSet("main")
+			// If you shade (directly include classes, not JiJ) a dependency into your mod, include it here using one of these methods:
+			// dependency("com.example.shadowedmod:1.2.3")
+			// configuration("exampleShadedConfigurationName")
+		}
+	}
+}
+
+dependencies {
+	minecraft libs.minecraft
+	mappings variantOf(libs.quilt.mappings) { classifier 'intermediary-v2' }
+	modImplementation libs.quilt.loader
+
+	modImplementation libs.quilted.fabric.api
+
+	modApi include("dev.emi:trinkets:${libs.versions.trinkets.get()}")
+	modApi include("com.unascribed:lib39-core:${libs.versions.lib39.get()}+${libs.versions.minecraft.get()}")
+	modApi include("com.unascribed:lib39-dessicant:${libs.versions.lib39.get()}+${libs.versions.minecraft.get()}")
+
+	modCompileOnly "dev.emi:emi-fabric:${libs.versions.emi.get()}+${libs.versions.minecraft.get()}:api"
+	modLocalRuntime "dev.emi:emi-fabric:${libs.versions.emi.get()}+${libs.versions.minecraft.get()}"
+}
+
+processResources {
+	inputs.properties 'version': version, 'group': project.group
+
+	filesMatching('quilt.mod.json') {
+		expand 'version': version, 'group': project.group
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = 'UTF-8'
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
+}
+
+java {
+	// Still required by IDEs such as Eclipse and Visual Studio Code
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+}
+
+jar {
+	from('LICENSE') {
+		rename { "${it}_${base.archivesName.get()}" }
+	}
+}

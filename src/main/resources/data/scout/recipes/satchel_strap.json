@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "lib39:discovered_via": "scout:tanned_leather",
+  "ingredients": [
+    {
+      "item": "scout:tanned_leather"
+    },
+    {
+      "tag": "c:string"
+    },
+    {
+      "item": "scout:tanned_leather"
+    }
+  ],
+  "result": {
+    "item": "scout:satchel_strap"
+  }
+}

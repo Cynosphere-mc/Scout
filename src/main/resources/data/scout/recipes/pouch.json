@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "lib39:discovered_via": "minecraft:leather",
+  "pattern": ["sls", "lbl", "sls"],
+  "key": {
+    "l": {
+      "tag": "c:leather"
+    },
+    "s": {
+      "tag": "c:string"
+    },
+    "b": {
+      "item": "minecraft:stone_button"
+    }
+  },
+  "result": {
+    "item": "scout:pouch"
+  }
+}
