@@ -12,9 +12,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import pm.c7.scout.ScoutScreenHandler;
 import pm.c7.scout.ScoutUtil;
+import pm.c7.scout.ScoutMixin.Transformer;
 import pm.c7.scout.screen.BagSlot;
 
 @Mixin(value = PlayerScreenHandler.class, priority = 950)
+@Transformer(PlayerScreenHandlerTransformer.class)
 public abstract class PlayerScreenHandlerMixin extends ScreenHandler implements ScoutScreenHandler {
     protected PlayerScreenHandlerMixin() {
         super(null, 0);
