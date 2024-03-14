@@ -6,11 +6,11 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.HeldItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Axis;
 import pm.c7.scout.ScoutUtil;
 import pm.c7.scout.item.BaseBagItem;
 
@@ -29,21 +29,21 @@ public class PouchFeatureRenderer<T extends LivingEntity, M extends EntityModel<
 		if (!leftPouch.isEmpty()) {
 			matrices.push();
 			((PlayerEntityModel<?>) this.getContextModel()).leftLeg.rotate(matrices);
-			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+			matrices.multiply(Axis.X_POSITIVE.rotationDegrees(180.0F));
+			matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(-90.0F));
 			matrices.scale(0.325F, 0.325F, 0.325F);
 			matrices.translate(0F, -0.325F, -0.475F);
-			this.heldItemRenderer.renderItem(entity, leftPouch, ModelTransformation.Mode.FIXED, false, matrices, vertexConsumers, light);
+			this.heldItemRenderer.renderItem(entity, leftPouch, ModelTransformationMode.FIXED, false, matrices, vertexConsumers, light);
 			matrices.pop();
 		}
 		if (!rightPouch.isEmpty()) {
 			matrices.push();
 			((PlayerEntityModel<?>) this.getContextModel()).rightLeg.rotate(matrices);
-			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(180.0F));
-			matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
+			matrices.multiply(Axis.X_POSITIVE.rotationDegrees(180.0F));
+			matrices.multiply(Axis.Y_POSITIVE.rotationDegrees(-90.0F));
 			matrices.scale(0.325F, 0.325F, 0.325F);
 			matrices.translate(0F, -0.325F, 0.475F);
-			this.heldItemRenderer.renderItem(entity, rightPouch, ModelTransformation.Mode.FIXED, false, matrices, vertexConsumers, light);
+			this.heldItemRenderer.renderItem(entity, rightPouch, ModelTransformationMode.FIXED, false, matrices, vertexConsumers, light);
 			matrices.pop();
 		}
 	}

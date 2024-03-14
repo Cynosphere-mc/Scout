@@ -3,6 +3,7 @@
 build/
 out/
 classes/
+.factorypath
 
 # Quilt Loom
 remappedSrc/

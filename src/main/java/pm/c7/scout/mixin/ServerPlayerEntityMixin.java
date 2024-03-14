@@ -21,74 +21,74 @@ import pm.c7.scout.screen.BagSlot;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin {
-    @Inject(method = "onDeath", at = @At("HEAD"))
-    private void scout$attemptFixGraveMods(DamageSource source, CallbackInfo callbackInfo) {
-        ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
-        ScoutScreenHandler handler = (ScoutScreenHandler) player.playerScreenHandler;
+	@Inject(method = "onDeath", at = @At("HEAD"))
+	private void scout$attemptFixGraveMods(DamageSource source, CallbackInfo callbackInfo) {
+		ServerPlayerEntity player = (ServerPlayerEntity) (Object) this;
+		ScoutScreenHandler handler = (ScoutScreenHandler) player.playerScreenHandler;
 
-        if (!player.world.getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
-            ItemStack backStack = ScoutUtil.findBagItem(player, BagType.SATCHEL, false);
-            if (!backStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) backStack.getItem();
-                int slots = bagItem.getSlotCount();
+		if (!player.getWorld().getGameRules().getBoolean(GameRules.KEEP_INVENTORY)) {
+			ItemStack backStack = ScoutUtil.findBagItem(player, BagType.SATCHEL, false);
+			if (!backStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) backStack.getItem();
+				int slots = bagItem.getSlotCount();
 
-                DefaultedList<BagSlot> bagSlots = handler.scout$getSatchelSlots();
+				DefaultedList<BagSlot> bagSlots = handler.scout$getSatchelSlots();
 
-                for (int i = 0; i < slots; i++) {
-                    BagSlot slot = bagSlots.get(i);
-                    slot.setInventory(null);
-                    slot.setEnabled(false);
-                }
+				for (int i = 0; i < slots; i++) {
+					BagSlot slot = bagSlots.get(i);
+					slot.setInventory(null);
+					slot.setEnabled(false);
+				}
 
-                PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-                packet.writeBoolean(false);
-                packet.writeInt(0);
-                packet.writeItemStack(backStack);
+				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+				packet.writeBoolean(false);
+				packet.writeInt(0);
+				packet.writeItemStack(backStack);
 
-                ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
-            }
+				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
+			}
 
-            ItemStack leftPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, false);
-            if (!leftPouchStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
-                int slots = bagItem.getSlotCount();
+			ItemStack leftPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, false);
+			if (!leftPouchStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
+				int slots = bagItem.getSlotCount();
 
-                DefaultedList<BagSlot> bagSlots = handler.scout$getLeftPouchSlots();
+				DefaultedList<BagSlot> bagSlots = handler.scout$getLeftPouchSlots();
 
-                for (int i = 0; i < slots; i++) {
-                    BagSlot slot = bagSlots.get(i);
-                    slot.setInventory(null);
-                    slot.setEnabled(false);
-                }
+				for (int i = 0; i < slots; i++) {
+					BagSlot slot = bagSlots.get(i);
+					slot.setInventory(null);
+					slot.setEnabled(false);
+				}
 
-                PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-                packet.writeBoolean(false);
-                packet.writeInt(0);
-                packet.writeItemStack(leftPouchStack);
+				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+				packet.writeBoolean(false);
+				packet.writeInt(0);
+				packet.writeItemStack(leftPouchStack);
 
-                ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
-            }
+				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
+			}
 
-            ItemStack rightPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, true);
-            if (!rightPouchStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) rightPouchStack.getItem();
-                int slots = bagItem.getSlotCount();
+			ItemStack rightPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, true);
+			if (!rightPouchStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) rightPouchStack.getItem();
+				int slots = bagItem.getSlotCount();
 
-                DefaultedList<BagSlot> bagSlots = handler.scout$getRightPouchSlots();
+				DefaultedList<BagSlot> bagSlots = handler.scout$getRightPouchSlots();
 
-                for (int i = 0; i < slots; i++) {
-                    BagSlot slot = bagSlots.get(i);
-                    slot.setInventory(null);
-                    slot.setEnabled(false);
-                }
+				for (int i = 0; i < slots; i++) {
+					BagSlot slot = bagSlots.get(i);
+					slot.setInventory(null);
+					slot.setEnabled(false);
+				}
 
-                PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-                packet.writeBoolean(false);
-                packet.writeInt(1);
-                packet.writeItemStack(rightPouchStack);
+				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+				packet.writeBoolean(false);
+				packet.writeInt(1);
+				packet.writeItemStack(rightPouchStack);
 
-                ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
-            }
-        }
-    }
+				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
+			}
+		}
+	}
 }

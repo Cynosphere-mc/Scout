@@ -10,87 +10,84 @@ import pm.c7.scout.config.ScoutConfigHandler;
 import pm.c7.scout.item.BaseBagItem;
 
 public class BagSlot extends Slot {
-    private final int index;
-    public Inventory inventory;
-    private boolean enabled = false;
+	private final int index;
+	public Inventory inventory;
+	private boolean enabled = false;
 	private int realX;
 	private int realY;
 
-    public BagSlot(int index, int x, int y) {
-        super(null, index, x, y);
-        this.index = index;
+	public BagSlot(int index, int x, int y) {
+		super(null, index, x, y);
+		this.index = index;
 		this.realX = x;
 		this.realY = y;
-    }
+	}
 
-    public void setInventory(Inventory inventory) {
-        this.inventory = inventory;
-    }
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
+	}
 
-    public void setEnabled(boolean state) {
-        enabled = state;
-    }
+	public void setEnabled(boolean state) {
+		enabled = state;
+	}
 
-    @Override
-    public boolean canInsert(ItemStack stack) {
-        if (stack.getItem() instanceof BaseBagItem)
-            return false;
+	@Override
+	public boolean canInsert(ItemStack stack) {
+		if (stack.getItem() instanceof BaseBagItem)
+			return false;
 
 		if (stack.getItem() instanceof BlockItem blockItem) {
 			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
 				return (boolean) ScoutConfigHandler.getConfigValue("allowShulkers").value();
 		}
 
-        return enabled && inventory != null;
-    }
-
-    @Override
-    public boolean canTakeItems(PlayerEntity playerEntity) {
-        return enabled && inventory != null;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled && inventory != null;
-    }
-
-    @Override
-    public ItemStack getStack() {
-        return enabled && this.inventory != null ? this.inventory.getStack(this.index) : ItemStack.EMPTY;
-    }
-
-    @Override
-    public void setStack(ItemStack stack) {
-        if (enabled && this.inventory != null) {
-            this.inventory.setStack(this.index, stack);
-            this.markDirty();
-        }
-    }
+		return enabled && inventory != null;
+	}
 
 	@Override
-	public void m_tfmituvd(ItemStack stack) {
+	public boolean canTakeItems(PlayerEntity playerEntity) {
+		return enabled && inventory != null;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return enabled && inventory != null;
+	}
+
+	@Override
+	public ItemStack getStack() {
+		return enabled && this.inventory != null ? this.inventory.getStack(this.index) : ItemStack.EMPTY;
+	}
+
+	@Override
+	public void setStack(ItemStack stack) {
 		if (enabled && this.inventory != null) {
 			this.inventory.setStack(this.index, stack);
 			this.markDirty();
 		}
 	}
 
-    @Override
-    public void markDirty() {
-        if (enabled && this.inventory != null) {
-            this.inventory.markDirty();
-        }
-    }
+	@Override
+	public void setStackByPlayer(ItemStack stack) {
+		this.setStack(stack);
+	}
 
-    @Override
-    public ItemStack takeStack(int amount) {
-        return enabled && this.inventory != null ? this.inventory.removeStack(this.index, amount) : ItemStack.EMPTY;
-    }
+	@Override
+	public void markDirty() {
+		if (enabled && this.inventory != null) {
+			this.inventory.markDirty();
+		}
+	}
 
-    @Override
-    public int getMaxItemCount() {
-        return enabled && this.inventory != null ? this.inventory.getMaxCountPerStack() : 0;
-    }
+	@Override
+	public ItemStack takeStack(int amount) {
+		return enabled && this.inventory != null ? this.inventory.removeStack(this.index, amount) : ItemStack.EMPTY;
+	}
+
+	@Override
+	public int getMaxItemCount() {
+		return enabled && this.inventory != null ? this.inventory.getMaxCountPerStack() : 0;
+	}
 
 	public int getX() {
 		return this.realX;

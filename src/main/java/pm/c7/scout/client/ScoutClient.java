@@ -108,7 +108,7 @@ public class ScoutClient implements ClientModInitializer {
 			}
 		});
 
-		ScreenEvents.AFTER_INIT.register((screen, client, scaledWidth, scaledHeight) -> {
+		ScreenEvents.AFTER_INIT.register((screen, client, firstInit) -> {
 			if (screen instanceof HandledScreen<?> handledScreen && client.player != null) {
 				if (ScoutUtil.isScreenBlacklisted(screen)) {
 					// realistically no one is going to have a screen bigger than 2147483647 pixels
