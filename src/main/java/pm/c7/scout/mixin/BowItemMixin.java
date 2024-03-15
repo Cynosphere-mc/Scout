@@ -12,14 +12,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import pm.c7.scout.ScoutUtil;
-import pm.c7.scout.config.ScoutConfigHandler;
+import pm.c7.scout.ScoutConfig;
 import pm.c7.scout.item.BaseBagItem;
 
 @Mixin(BowItem.class)
 public class BowItemMixin {
 	@Inject(method = "onStoppedUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/player/PlayerEntity;DDDLnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V"), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void scout$arrowsFromBags(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci, PlayerEntity playerEntity, boolean bl, ItemStack itemStack, int maxTime, float f) {
-		if ((boolean) ScoutConfigHandler.getConfigValue("useArrows").value()) {
+		if (ScoutConfig.CONFIG.useArrows.value()) {
 			boolean infinity = bl && itemStack.isOf(Items.ARROW);
 			boolean hasRan = false;
 

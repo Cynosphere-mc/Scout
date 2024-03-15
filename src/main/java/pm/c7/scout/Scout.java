@@ -12,7 +12,6 @@ import net.minecraft.util.Identifier;
 
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
-import pm.c7.scout.config.ScoutConfigHandler;
 import pm.c7.scout.registry.ScoutItems;
 
 public class Scout implements ModInitializer {
@@ -32,7 +31,6 @@ public class Scout implements ModInitializer {
 
 	@Override
 	public void onInitialize(ModContainer mod) {
-		new ScoutConfigHandler();
 		ScoutItems.init();
 		Registry.register(Registries.ITEM_GROUP, new Identifier(ScoutUtil.MOD_ID, "itemgroup"), ITEM_GROUP);
 	}

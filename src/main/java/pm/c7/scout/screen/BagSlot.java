@@ -6,7 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
-import pm.c7.scout.config.ScoutConfigHandler;
+import pm.c7.scout.ScoutConfig;
 import pm.c7.scout.item.BaseBagItem;
 
 public class BagSlot extends Slot {
@@ -38,7 +38,7 @@ public class BagSlot extends Slot {
 
 		if (stack.getItem() instanceof BlockItem blockItem) {
 			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
-				return (boolean) ScoutConfigHandler.getConfigValue("allowShulkers").value();
+				return enabled && inventory != null && ScoutConfig.CONFIG.allowShulkers.value();
 		}
 
 		return enabled && inventory != null;
