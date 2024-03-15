@@ -12,34 +12,34 @@ import pm.c7.scout.item.BaseBagItem.BagType;
 import pm.c7.scout.mixin.client.HandledScreenAccessor;
 
 public class ScoutEmiPlugin implements EmiPlugin {
-    @Override
-    public void register(EmiRegistry registry) {
-        registry.addExclusionArea(InventoryScreen.class, (screen, consumer) -> {
-            MinecraftClient client = MinecraftClient.getInstance();
-            ItemStack leftPouchStack = ScoutUtil.findBagItem(client.player, BagType.POUCH, false);
-            if (!leftPouchStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
-                int slots = bagItem.getSlotCount();
-                int columns = (int) Math.ceil(slots / 3);
+	@Override
+	public void register(EmiRegistry registry) {
+		registry.addExclusionArea(InventoryScreen.class, (screen, consumer) -> {
+			MinecraftClient client = MinecraftClient.getInstance();
+			ItemStack leftPouchStack = ScoutUtil.findBagItem(client.player, BagType.POUCH, false);
+			if (!leftPouchStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
+				int slots = bagItem.getSlotCount();
+				int columns = (int) Math.ceil(slots / 3);
 
-                int x = ((HandledScreenAccessor) screen).getX() - (columns * 18);
-                int y = ((HandledScreenAccessor) screen).getY() + 76;
+				int x = ((HandledScreenAccessor) screen).getX() - (columns * 18);
+				int y = ((HandledScreenAccessor) screen).getY() + 76;
 
-                consumer.accept(new Bounds(x, y, columns * 18, 68));
-            }
+				consumer.accept(new Bounds(x, y, columns * 18, 68));
+			}
 
-            ItemStack rightPouchStack = ScoutUtil.findBagItem(client.player, BagType.POUCH, true);
-            if (!rightPouchStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) rightPouchStack.getItem();
-                int slots = bagItem.getSlotCount();
-                int columns = (int) Math.ceil(slots / 3);
+			ItemStack rightPouchStack = ScoutUtil.findBagItem(client.player, BagType.POUCH, true);
+			if (!rightPouchStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) rightPouchStack.getItem();
+				int slots = bagItem.getSlotCount();
+				int columns = (int) Math.ceil(slots / 3);
 
-                int x = ((HandledScreenAccessor) screen).getX() + 176;
-                int y = ((HandledScreenAccessor) screen).getY() + 76;
+				int x = ((HandledScreenAccessor) screen).getX() + 176;
+				int y = ((HandledScreenAccessor) screen).getY() + 76;
 
-                consumer.accept(new Bounds(x, y, columns * 18, 68));
-            }
-        });
-    }
+				consumer.accept(new Bounds(x, y, columns * 18, 68));
+			}
+		});
+	}
 
 }

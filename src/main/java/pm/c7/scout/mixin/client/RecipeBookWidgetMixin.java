@@ -19,36 +19,36 @@ import pm.c7.scout.item.BaseBagItem.BagType;
 @Environment(EnvType.CLIENT)
 @Mixin(value = RecipeBookWidget.class, priority = 950)
 public class RecipeBookWidgetMixin {
-    @Shadow
-    protected MinecraftClient client;
-    @Shadow
-    private int leftOffset;
+	@Shadow
+	protected MinecraftClient client;
+	@Shadow
+	private int leftOffset;
 
-    @Inject(method = "findLeftEdge", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-    private void scout$modifyRecipeBookPosition(int width, int backgroundWidth, CallbackInfoReturnable<Integer> callbackInfo, int x) {
-        if (this.client != null && this.client.player != null && this.isOpen()) {
-            ItemStack leftPouchStack = ScoutUtil.findBagItem(this.client.player, BagType.POUCH, false);
-            if (!leftPouchStack.isEmpty()) {
-                BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
-                int slots = bagItem.getSlotCount();
+	@Inject(method = "findLeftEdge", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	private void scout$modifyRecipeBookPosition(int width, int backgroundWidth, CallbackInfoReturnable<Integer> callbackInfo, int x) {
+		if (this.client != null && this.client.player != null && this.isOpen()) {
+			ItemStack leftPouchStack = ScoutUtil.findBagItem(this.client.player, BagType.POUCH, false);
+			if (!leftPouchStack.isEmpty()) {
+				BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
+				int slots = bagItem.getSlotCount();
 
-                int columns = (int) Math.ceil(slots / 3);
+				int columns = (int) Math.ceil(slots / 3);
 
-                // Realign as best we can when "Keep crafting screens centered" is enabled in Better Recipe Book
-                if (this.leftOffset != 86) {
-                    int diff = this.leftOffset - 86;
-                    x -= diff;
-                }
+				// Realign as best we can when "Keep crafting screens centered" is enabled in Better Recipe Book
+				if (this.leftOffset != 86) {
+					int diff = this.leftOffset - 86;
+					x -= diff;
+				}
 
-                x += 18 * columns;
+				x += 18 * columns;
 
-                callbackInfo.setReturnValue(x);
-            }
-        }
-    }
+				callbackInfo.setReturnValue(x);
+			}
+		}
+	}
 
-    @Shadow
-    public boolean isOpen() {
-        return false;
-    }
+	@Shadow
+	public boolean isOpen() {
+		return false;
+	}
 }

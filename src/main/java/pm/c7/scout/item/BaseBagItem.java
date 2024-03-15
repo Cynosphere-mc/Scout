@@ -31,85 +31,85 @@ import java.util.List;
 import java.util.Optional;
 
 public class BaseBagItem extends TrinketItem {
-    private static final String ITEMS_KEY = "Items";
+	private static final String ITEMS_KEY = "Items";
 
-    private final int slots;
-    private final BagType type;
+	private final int slots;
+	private final BagType type;
 
-    public BaseBagItem(Settings settings, int slots, BagType type) {
-        super(settings);
+	public BaseBagItem(Settings settings, int slots, BagType type) {
+		super(settings);
 
-        if (type == BagType.SATCHEL && slots > ScoutUtil.MAX_SATCHEL_SLOTS) {
-            throw new IllegalArgumentException("Satchel has too many slots.");
-        }
-        if (type == BagType.POUCH && slots > ScoutUtil.MAX_POUCH_SLOTS) {
-            throw new IllegalArgumentException("Pouch has too many slots.");
-        }
+		if (type == BagType.SATCHEL && slots > ScoutUtil.MAX_SATCHEL_SLOTS) {
+			throw new IllegalArgumentException("Satchel has too many slots.");
+		}
+		if (type == BagType.POUCH && slots > ScoutUtil.MAX_POUCH_SLOTS) {
+			throw new IllegalArgumentException("Pouch has too many slots.");
+		}
 
-        this.slots = slots;
-        this.type = type;
-    }
+		this.slots = slots;
+		this.type = type;
+	}
 
-    public int getSlotCount() {
-        return this.slots;
-    }
+	public int getSlotCount() {
+		return this.slots;
+	}
 
-    public BagType getType() {
-        return this.type;
-    }
+	public BagType getType() {
+		return this.type;
+	}
 
-    @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        super.appendTooltip(stack, world, tooltip, context);
-        tooltip.add(Text.translatable("tooltip.scout.slots", Text.literal(String.valueOf(this.slots)).formatted(Formatting.BLUE)).formatted(Formatting.GRAY));
-    }
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+		super.appendTooltip(stack, world, tooltip, context);
+		tooltip.add(Text.translatable("tooltip.scout.slots", Text.literal(String.valueOf(this.slots)).formatted(Formatting.BLUE)).formatted(Formatting.GRAY));
+	}
 
-    public Inventory getInventory(ItemStack stack) {
-        SimpleInventory inventory = new SimpleInventory(this.slots) {
-            @Override
-            public void markDirty() {
-                stack.getOrCreateNbt().put(ITEMS_KEY, ScoutUtil.inventoryToTag(this));
-                super.markDirty();
-            }
-        };
+	public Inventory getInventory(ItemStack stack) {
+		SimpleInventory inventory = new SimpleInventory(this.slots) {
+			@Override
+			public void markDirty() {
+				stack.getOrCreateNbt().put(ITEMS_KEY, ScoutUtil.inventoryToTag(this));
+				super.markDirty();
+			}
+		};
 
-        NbtCompound compound = stack.getOrCreateNbt();
-        if (!compound.contains(ITEMS_KEY)) {
-            compound.put(ITEMS_KEY, new NbtList());
-        }
+		NbtCompound compound = stack.getOrCreateNbt();
+		if (!compound.contains(ITEMS_KEY)) {
+			compound.put(ITEMS_KEY, new NbtList());
+		}
 
-        NbtList items = compound.getList(ITEMS_KEY, 10);
+		NbtList items = compound.getList(ITEMS_KEY, 10);
 
-        ScoutUtil.inventoryFromTag(items, inventory);
+		ScoutUtil.inventoryFromTag(items, inventory);
 
-        return inventory;
-    }
+		return inventory;
+	}
 
-    @Override
-    public Optional<TooltipData> getTooltipData(ItemStack stack) {
-        DefaultedList<ItemStack> stacks = DefaultedList.of();
-        Inventory inventory = getInventory(stack);
+	@Override
+	public Optional<TooltipData> getTooltipData(ItemStack stack) {
+		DefaultedList<ItemStack> stacks = DefaultedList.of();
+		Inventory inventory = getInventory(stack);
 
-        for (int i = 0; i < slots; i++) {
-            stacks.add(inventory.getStack(i));
-        }
+		for (int i = 0; i < slots; i++) {
+			stacks.add(inventory.getStack(i));
+		}
 
-        if (stacks.stream().allMatch(ItemStack::isEmpty)) return Optional.empty();
+		if (stacks.stream().allMatch(ItemStack::isEmpty)) return Optional.empty();
 
-        return Optional.of(new BagTooltipData(stacks, slots));
-    }
+		return Optional.of(new BagTooltipData(stacks, slots));
+	}
 
-    @Override
-    public void onEquip(ItemStack stack, SlotReference slotRef, LivingEntity entity) {
-        if (entity instanceof PlayerEntity player)
-			updateSlots(player);
-    }
-
-    @Override
-    public void onUnequip(ItemStack stack, SlotReference slotRef, LivingEntity entity) {
+	@Override
+	public void onEquip(ItemStack stack, SlotReference slotRef, LivingEntity entity) {
 		if (entity instanceof PlayerEntity player)
 			updateSlots(player);
-    }
+	}
+
+	@Override
+	public void onUnequip(ItemStack stack, SlotReference slotRef, LivingEntity entity) {
+		if (entity instanceof PlayerEntity player)
+			updateSlots(player);
+	}
 
 	private void updateSlots(PlayerEntity player) {
 		ScoutScreenHandler handler = (ScoutScreenHandler) player.playerScreenHandler;
@@ -177,37 +177,37 @@ public class BaseBagItem extends TrinketItem {
 		}
 	}
 
-    @Override
-    public boolean canEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
-        Item item = stack.getItem();
+	@Override
+	public boolean canEquip(ItemStack stack, SlotReference slot, LivingEntity entity) {
+		Item item = stack.getItem();
 
-        ItemStack slotStack = slot.inventory().getStack(slot.index());
-        Item slotItem = slotStack.getItem();
+		ItemStack slotStack = slot.inventory().getStack(slot.index());
+		Item slotItem = slotStack.getItem();
 
-        if (slotItem instanceof BaseBagItem) {
-            if (((BaseBagItem) item).getType() == BagType.SATCHEL) {
-                if (((BaseBagItem) slotItem).getType() == BagType.SATCHEL) {
-                    return true;
-                } else {
-                    return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.SATCHEL, false).isEmpty();
-                }
-            } else if (((BaseBagItem) item).getType() == BagType.POUCH) {
-                if (((BaseBagItem) slotItem).getType() == BagType.POUCH) {
-                    return true;
-                } else {
-                    return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.POUCH, true).isEmpty();
-                }
-            }
-        } else {
-            if (((BaseBagItem) item).getType() == BagType.SATCHEL) {
-                return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.SATCHEL, false).isEmpty();
-            } else if (((BaseBagItem) item).getType() == BagType.POUCH) {
-                return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.POUCH, true).isEmpty();
-            }
-        }
+		if (slotItem instanceof BaseBagItem) {
+			if (((BaseBagItem) item).getType() == BagType.SATCHEL) {
+				if (((BaseBagItem) slotItem).getType() == BagType.SATCHEL) {
+					return true;
+				} else {
+					return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.SATCHEL, false).isEmpty();
+				}
+			} else if (((BaseBagItem) item).getType() == BagType.POUCH) {
+				if (((BaseBagItem) slotItem).getType() == BagType.POUCH) {
+					return true;
+				} else {
+					return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.POUCH, true).isEmpty();
+				}
+			}
+		} else {
+			if (((BaseBagItem) item).getType() == BagType.SATCHEL) {
+				return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.SATCHEL, false).isEmpty();
+			} else if (((BaseBagItem) item).getType() == BagType.POUCH) {
+				return ScoutUtil.findBagItem((PlayerEntity) entity, BagType.POUCH, true).isEmpty();
+			}
+		}
 
-        return false;
-    }
+		return false;
+	}
 
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected) {
@@ -219,8 +219,8 @@ public class BaseBagItem extends TrinketItem {
 		}
 	}
 
-    public enum BagType {
-        SATCHEL,
-        POUCH
-    }
+	public enum BagType {
+		SATCHEL,
+		POUCH
+	}
 }

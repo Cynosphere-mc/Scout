@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.collection.DefaultedList;
@@ -44,59 +45,59 @@ public class ScoutUtil {
 	public static final int BAG_SLOTS_END = RIGHT_POUCH_SLOT_START - MAX_POUCH_SLOTS;
 
 	public static ItemStack findBagItem(PlayerEntity player, BaseBagItem.BagType type, boolean right) {
-        ItemStack targetStack = ItemStack.EMPTY;
+		ItemStack targetStack = ItemStack.EMPTY;
 
-        boolean hasFirstPouch = false;
-        Optional<TrinketComponent> _component = TrinketsApi.getTrinketComponent(player);
-        if (_component.isPresent()) {
-            TrinketComponent component = _component.get();
-            for (Pair<SlotReference, ItemStack> pair : component.getAllEquipped()) {
-                ItemStack slotStack = pair.getRight();
+		boolean hasFirstPouch = false;
+		Optional<TrinketComponent> _component = TrinketsApi.getTrinketComponent(player);
+		if (_component.isPresent()) {
+			TrinketComponent component = _component.get();
+			for (Pair<SlotReference, ItemStack> pair : component.getAllEquipped()) {
+				ItemStack slotStack = pair.getRight();
 
-                if (slotStack.getItem() instanceof BaseBagItem bagItem) {
+				if (slotStack.getItem() instanceof BaseBagItem bagItem) {
 					if (bagItem.getType() == type) {
-                        if (type == BagType.POUCH) {
-                            if (right && !hasFirstPouch) {
-                                hasFirstPouch = true;
+						if (type == BagType.POUCH) {
+							if (right && !hasFirstPouch) {
+								hasFirstPouch = true;
 							} else {
-                                targetStack = slotStack;
-                                break;
-                            }
-                        } else {
-                            targetStack = slotStack;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+								targetStack = slotStack;
+								break;
+							}
+						} else {
+							targetStack = slotStack;
+							break;
+						}
+					}
+				}
+			}
+		}
 
-        return targetStack;
-    }
+		return targetStack;
+	}
 
-    public static NbtList inventoryToTag(Inventory inventory) {
-        NbtList tag = new NbtList();
+	public static NbtList inventoryToTag(Inventory inventory) {
+		NbtList tag = new NbtList();
 
-        for(int i = 0; i < inventory.size(); i++) {
-            NbtCompound stackTag = new NbtCompound();
-            stackTag.putInt("Slot", i);
-            stackTag.put("Stack", inventory.getStack(i).writeNbt(new NbtCompound()));
-            tag.add(stackTag);
-        }
+		for(int i = 0; i < inventory.size(); i++) {
+			NbtCompound stackTag = new NbtCompound();
+			stackTag.putInt("Slot", i);
+			stackTag.put("Stack", inventory.getStack(i).writeNbt(new NbtCompound()));
+			tag.add(stackTag);
+		}
 
-        return tag;
-    }
+		return tag;
+	}
 
-    public static void inventoryFromTag(NbtList tag, Inventory inventory) {
-        inventory.clear();
+	public static void inventoryFromTag(NbtList tag, Inventory inventory) {
+		inventory.clear();
 
-        tag.forEach(element -> {
-            NbtCompound stackTag = (NbtCompound) element;
-            int slot = stackTag.getInt("Slot");
-            ItemStack stack = ItemStack.fromNbt(stackTag.getCompound("Stack"));
-            inventory.setStack(slot, stack);
-        });
-    }
+		tag.forEach(element -> {
+			NbtCompound stackTag = (NbtCompound) element;
+			int slot = stackTag.getInt("Slot");
+			ItemStack stack = ItemStack.fromNbt(stackTag.getCompound("Stack"));
+			inventory.setStack(slot, stack);
+		});
+	}
 
 	public static boolean isBagSlot(int slot) {
 		return slot <= SATCHEL_SLOT_START && slot > BAG_SLOTS_END;

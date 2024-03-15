@@ -9,7 +9,6 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
 import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -277,7 +276,6 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 			for (int i = ScoutUtil.SATCHEL_SLOT_START; i > ScoutUtil.BAG_SLOTS_END; i--) {
 				BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(i, this.client.player.playerScreenHandler);
 				if (slot != null && slot.isEnabled()) {
-					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					this.drawSlot(graphics, slot);
 				}
 
