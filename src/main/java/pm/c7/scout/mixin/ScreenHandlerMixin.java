@@ -6,18 +6,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.collection.DefaultedList;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import pm.c7.scout.ScoutMixin.Transformer;
 import pm.c7.scout.ScoutUtil;
 
-@Mixin(ScreenHandler.class)
+@Mixin(value = ScreenHandler.class, priority = 950)
 @Transformer(ScreenHandlerTransformer.class)
 public abstract class ScreenHandlerMixin {
 	@Inject(method = "getSlot", at = @At("HEAD"), cancellable = true)
@@ -52,6 +55,15 @@ public abstract class ScreenHandlerMixin {
 					}
 				}
 			}
+		}
+	}
+
+	@Redirect(method = "internalOnSlotClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;get(I)Ljava/lang/Object;", ordinal = 5))
+	public Object scout$fixSlotIndexing(DefaultedList<Slot> self, int index, int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
+		if (ScoutUtil.isBagSlot(index)) {
+			return ScoutUtil.getBagSlot(index, player.playerScreenHandler);
+		} else {
+			return self.get(index);
 		}
 	}
 

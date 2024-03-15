@@ -24,7 +24,7 @@ public class PlayerScreenHandlerTransformer implements ClassNodeTransformer {
 
 		for (var mn : node.methods) {
 			// that other comment was a half truth, you can transform mixins :^)
-			if (mn.name.equals("handler$zei000$trinkets$quickMove") || mn.name.equals(quickMove)) {
+			if (mn.name.endsWith("trinkets$quickMove") || mn.name.equals(quickMove)) {
 				for (var insn : mn.instructions) {
 					if (insn instanceof VarInsnNode vin) {
 						if (vin.getOpcode() == ASTORE && vin.var == 4) {
