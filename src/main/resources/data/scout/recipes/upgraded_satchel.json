@@ -1,5 +1,5 @@
 {
-  "type": "minecraft:smithing",
+  "type": "minecraft:smithing_transform",
   "lib39:discovered_via": "minecraft:diamond",
   "base": {
     "item": "scout:satchel"
@@ -9,5 +9,8 @@
   },
   "result": {
     "item": "scout:upgraded_satchel"
+  },
+  "template": {
+    "item": "scout:tanned_leather"
   }
 }
