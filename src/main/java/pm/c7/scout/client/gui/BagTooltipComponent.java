@@ -2,7 +2,7 @@ package pm.c7.scout.client.gui;
 
 import com.google.common.math.IntMath;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
@@ -31,7 +31,7 @@ public class BagTooltipComponent implements TooltipComponent {
 	}
 
 	@Override
-	public void drawItems(TextRenderer textRenderer, int x, int y, GuiGraphics graphics) {
+	public void drawItems(TextRenderer textRenderer, int x, int y, DrawContext graphics) {
 		int originalX = x;
 
 		for (int i = 0; i < slotCount; i++) {
@@ -45,7 +45,7 @@ public class BagTooltipComponent implements TooltipComponent {
 		}
 	}
 
-	private void drawSlot(int x, int y, int index, GuiGraphics graphics, TextRenderer textRenderer) {
+	private void drawSlot(int x, int y, int index, DrawContext graphics, TextRenderer textRenderer) {
 		ItemStack itemStack = this.inventory.get(index);
 		graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 46, 7, 18, 18, 256, 256);
 		graphics.drawItem(itemStack, x + 1, y + 1, index);

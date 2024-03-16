@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookProvider;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import org.spongepowered.asm.mixin.Mixin;

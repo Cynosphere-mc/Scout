@@ -1,8 +1,8 @@
 package pm.c7.scout.mixin;
 
 import org.objectweb.asm.tree.*;
-import org.quiltmc.loader.api.QuiltLoader;
 
+import net.fabricmc.loader.api.FabricLoader;
 import pm.c7.scout.mixinsupport.ClassNodeTransformer;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -10,7 +10,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class PlayerScreenHandlerTransformer implements ClassNodeTransformer {
 	@Override
 	public void transform(String name, ClassNode node) {
-		var resolver = QuiltLoader.getMappingResolver();
+		var resolver = FabricLoader.getInstance().getMappingResolver();
 		var namespace = "intermediary";
 
 		var LPlayerScreenHandler = L(slash(name));
@@ -23,7 +23,7 @@ public class PlayerScreenHandlerTransformer implements ClassNodeTransformer {
 		var DefaultedList = slash(resolver.mapClassName(namespace, "net.minecraft.class_2371"));
 
 		for (var mn : node.methods) {
-			// that other comment was a half truth, you can transform mixins :^)
+			// fix slot checking for trinkets quick move mixin
 			if (mn.name.endsWith("trinkets$quickMove") || mn.name.equals(quickMove)) {
 				for (var insn : mn.instructions) {
 					if (insn instanceof VarInsnNode vin) {

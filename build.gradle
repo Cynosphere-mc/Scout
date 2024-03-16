@@ -11,6 +11,10 @@ group = project.maven_group
 
 repositories {
 	maven {
+		name = "Fabric"
+		url = "https://maven.fabricmc.net/"
+	}
+	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
@@ -42,11 +46,11 @@ loom {
 }
 
 dependencies {
-	minecraft libs.minecraft
-	mappings variantOf(libs.quilt.mappings) { classifier 'intermediary-v2' }
-	modImplementation libs.quilt.loader
+	minecraft "com.mojang:minecraft:${libs.versions.minecraft.get()}"
+	mappings "net.fabricmc:yarn:${libs.versions.minecraft.get()}+${libs.versions.yarn.get()}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${libs.versions.fabric.loader.get()}"
 
-	modImplementation libs.quilted.fabric.api
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${libs.versions.fabric.api.get()}+${libs.versions.minecraft.get()}"
 
 	// not JiJ because it causes its mixins to fail to load
 	modApi "dev.emi:trinkets:${libs.versions.trinkets.get()}"
@@ -59,17 +63,17 @@ dependencies {
 
 processResources {
 	inputs.property 'version', version
-	inputs.property 'group', project.group
 	inputs.property 'minecraft_version', libs.versions.minecraft.get()
+	inputs.property 'fabric_version', libs.versions.fabric.api.get()
 	inputs.property 'trinkets_version', libs.versions.trinkets.get()
 	inputs.property 'lib39_version', libs.versions.lib39.get()
 	inputs.property 'emi_version', libs.versions.emi.get()
 
-	filesMatching('quilt.mod.json') {
+	filesMatching('fabric.mod.json') {
 		expand (
 			"version": version,
-			"group": project.group,
 			"minecraft_version": libs.versions.minecraft.get(),
+			"fabric_version": libs.versions.fabric.api.get(),
 			"trinkets_version": libs.versions.trinkets.get(),
 			"lib39_version": libs.versions.lib39.get(),
 			"emi_version": libs.versions.emi.get()

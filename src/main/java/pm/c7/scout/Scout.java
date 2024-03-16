@@ -1,7 +1,10 @@
 package pm.c7.scout;
 
+import java.util.Properties;
+
 import com.unascribed.lib39.core.api.AutoRegistry;
 
+import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -10,27 +13,28 @@ import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+import pm.c7.scout.config.ScoutConfig;
 import pm.c7.scout.registry.ScoutItems;
 
 public class Scout implements ModInitializer {
 	public static final AutoRegistry AUTOREGISTRY = AutoRegistry.of(ScoutUtil.MOD_ID);
 	public static final ItemGroup ITEM_GROUP = FabricItemGroup.builder()
 		.icon(() -> new ItemStack(ScoutItems.SATCHEL))
-		.name(Text.translatable("itemGroup.scout.itemgroup"))
+		.displayName(Text.translatable("itemGroup.scout.itemgroup"))
 		.entries((context, entries) -> {
-			entries.addItem(ScoutItems.TANNED_LEATHER);
-			entries.addItem(ScoutItems.SATCHEL_STRAP);
-			entries.addItem(ScoutItems.SATCHEL);
-			entries.addItem(ScoutItems.UPGRADED_SATCHEL);
-			entries.addItem(ScoutItems.POUCH);
-			entries.addItem(ScoutItems.UPGRADED_POUCH);
+			entries.add(ScoutItems.TANNED_LEATHER);
+			entries.add(ScoutItems.SATCHEL_STRAP);
+			entries.add(ScoutItems.SATCHEL);
+			entries.add(ScoutItems.UPGRADED_SATCHEL);
+			entries.add(ScoutItems.POUCH);
+			entries.add(ScoutItems.UPGRADED_POUCH);
 		})
 		.build();
 
+
 	@Override
-	public void onInitialize(ModContainer mod) {
+	public void onInitialize() {
+		ScoutConfig.loadConfig();
 		ScoutItems.init();
 		Registry.register(Registries.ITEM_GROUP, new Identifier(ScoutUtil.MOD_ID, "itemgroup"), ITEM_GROUP);
 	}

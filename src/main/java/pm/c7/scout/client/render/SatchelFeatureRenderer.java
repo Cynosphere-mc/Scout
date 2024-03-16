@@ -1,9 +1,9 @@
 package pm.c7.scout.client.render;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;

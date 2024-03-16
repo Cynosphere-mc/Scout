@@ -3,7 +3,7 @@ package pm.c7.scout.mixin.client;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -44,8 +44,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	@Shadow
 	protected int backgroundHeight;
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawBackground(Lnet/minecraft/client/gui/GuiGraphics;FII)V"))
-	private void scout$drawSatchelRow(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawBackground(Lnet/minecraft/client/gui/DrawContext;FII)V"))
+	private void scout$drawSatchelRow(DrawContext graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtil.isScreenBlacklisted(this)) {
 			ItemStack backStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.SATCHEL, false);
 			if (!backStack.isEmpty()) {
@@ -96,7 +96,7 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	}
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableDepthTest()V", remap = false))
-	private void scout$drawPouchSlots(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	private void scout$drawPouchSlots(DrawContext graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtil.isScreenBlacklisted(this)) {
 			ItemStack leftPouchStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.POUCH, false);
 			if (!leftPouchStack.isEmpty()) {
@@ -270,8 +270,8 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 		}
 	}
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/GuiGraphics;II)V"))
-	public void scout$drawOurSlots(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawForeground(Lnet/minecraft/client/gui/DrawContext;II)V"))
+	public void scout$drawOurSlots(DrawContext graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtil.isScreenBlacklisted(this)) {
 			for (int i = ScoutUtil.SATCHEL_SLOT_START; i > ScoutUtil.BAG_SLOTS_END; i--) {
 				BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(i, this.client.player.playerScreenHandler);
@@ -309,9 +309,9 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	}
 
 	@Shadow
-	private void drawSlot(GuiGraphics graphics, Slot slot) {}
+	private void drawSlot(DrawContext graphics, Slot slot) {}
 	@Shadow
-	public static void drawSlotHighlight(GuiGraphics graphics, int x, int y, int z) {}
+	public static void drawSlotHighlight(DrawContext graphics, int x, int y, int z) {}
 	@Shadow
 	private boolean isPointOverSlot(Slot slot, double pointX, double pointY) {
 		return false;

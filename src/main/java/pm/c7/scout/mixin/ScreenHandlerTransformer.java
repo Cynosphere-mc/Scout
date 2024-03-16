@@ -1,8 +1,8 @@
 package pm.c7.scout.mixin;
 
 import org.objectweb.asm.tree.*;
-import org.quiltmc.loader.api.QuiltLoader;
 
+import net.fabricmc.loader.api.FabricLoader;
 import pm.c7.scout.mixinsupport.ClassNodeTransformer;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -12,7 +12,7 @@ public class ScreenHandlerTransformer implements ClassNodeTransformer {
 
 	@Override
 	public void transform(String name, ClassNode node) {
-		var resolver = QuiltLoader.getMappingResolver();
+		var resolver = FabricLoader.getInstance().getMappingResolver();
 		var namespace = "intermediary";
 
 		var internalOnSlotClick = resolver.mapMethodName(namespace, name, "method_30010", "(IILnet/minecraft/class_1713;Lnet/minecraft/class_1657;)V");
@@ -106,9 +106,10 @@ public class ScreenHandlerTransformer implements ClassNodeTransformer {
 						}
 					}
 				}
-			} else if (mn.name.endsWith("debugify$handleCtrlQCrafting")) { // ughghghhghghghghgh
+			} else if (mn.name.startsWith("handler$")) {
+				// fix getting slots for mixins
 				for (var insn : mn.instructions) {
-					if (insn instanceof VarInsnNode vin && vin.getOpcode() == ASTORE && vin.var == 6) {
+					if (insn instanceof VarInsnNode vin && vin.getOpcode() == ASTORE && (vin.var == 6 || vin.var == 7)) {
 						if (vin.getPrevious() instanceof TypeInsnNode prevInsn && prevInsn.getOpcode() == CHECKCAST && prevInsn.desc.equals(Slot)) {
 							if (prevInsn.getPrevious() instanceof MethodInsnNode prevPrevInsn && prevPrevInsn.getOpcode() == INVOKEVIRTUAL) {
 								if(prevPrevInsn.owner.equals(DefaultedList)) {

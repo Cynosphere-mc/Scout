@@ -8,16 +8,16 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import pm.c7.scout.ScoutUtil;
-import pm.c7.scout.ScoutConfig;
+import pm.c7.scout.config.ScoutConfig;
 import pm.c7.scout.item.BaseBagItem;
 
 import java.util.function.Predicate;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
-	@Inject(method = "getArrowType", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/RangedWeaponItem;getProjectiles()Ljava/util/function/Predicate;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	public void scout$arrowsFromBags(ItemStack stack, CallbackInfoReturnable<ItemStack> cir, Predicate<ItemStack> predicate, ItemStack itemStack) {
-		if (ScoutConfig.CONFIG.useArrows.value()) {
+	@Inject(method = "getProjectileType", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/item/RangedWeaponItem;getProjectiles()Ljava/util/function/Predicate;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	public void scout$arrowsFromBags(ItemStack stack, CallbackInfoReturnable<ItemStack> cir, Predicate<ItemStack> predicate) {
+		if (ScoutConfig.useArrows) {
 			var self = (PlayerEntity) (Object) this;
 			var leftPouch = ScoutUtil.findBagItem(self, BaseBagItem.BagType.POUCH, false);
 			var rightPouch = ScoutUtil.findBagItem(self, BaseBagItem.BagType.POUCH, true);

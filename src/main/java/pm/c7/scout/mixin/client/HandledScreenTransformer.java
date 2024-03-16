@@ -1,8 +1,8 @@
 package pm.c7.scout.mixin.client;
 
 import org.objectweb.asm.tree.*;
-import org.quiltmc.loader.api.QuiltLoader;
 
+import net.fabricmc.loader.api.FabricLoader;
 import pm.c7.scout.mixinsupport.ClassNodeTransformer;
 
 import static org.objectweb.asm.Opcodes.*;
@@ -10,7 +10,7 @@ import static org.objectweb.asm.Opcodes.*;
 public class HandledScreenTransformer implements ClassNodeTransformer {
 	@Override
 	public void transform(String name, ClassNode node) {
-		var resolver = QuiltLoader.getMappingResolver();
+		var resolver = FabricLoader.getInstance().getMappingResolver();
 		var namespace = "intermediary";
 
 		var drawSlot = resolver.mapMethodName(namespace, name, "method_2385", "(Lnet/minecraft/class_332;Lnet/minecraft/class_1735;)V");

@@ -3,6 +3,7 @@ package pm.c7.scout.item;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.item.TooltipData;
 import net.minecraft.entity.Entity;
@@ -21,7 +22,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+
 import pm.c7.scout.ScoutNetworking;
 import pm.c7.scout.ScoutScreenHandler;
 import pm.c7.scout.ScoutUtil;

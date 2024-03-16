@@ -1,6 +1,10 @@
 package pm.c7.scout.client;
 
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
@@ -9,11 +13,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.collection.DefaultedList;
-import org.quiltmc.loader.api.ModContainer;
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking;
-import org.quiltmc.qsl.screen.api.client.ScreenEvents;
-import org.quiltmc.qsl.tooltip.api.client.TooltipComponentCallback;
+
 import pm.c7.scout.ScoutNetworking;
 import pm.c7.scout.ScoutScreenHandler;
 import pm.c7.scout.ScoutUtil;
@@ -28,7 +28,7 @@ import pm.c7.scout.screen.BagSlot;
 
 public class ScoutClient implements ClientModInitializer {
 	@Override
-	public void onInitializeClient(ModContainer mod) {
+	public void onInitializeClient() {
 		ClientPlayNetworking.registerGlobalReceiver(ScoutNetworking.ENABLE_SLOTS, (client, handler, packet, sender) -> {
 			client.execute(() -> {
 				assert client.player != null;
@@ -108,7 +108,7 @@ public class ScoutClient implements ClientModInitializer {
 			}
 		});
 
-		ScreenEvents.AFTER_INIT.register((screen, client, firstInit) -> {
+		ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
 			if (screen instanceof HandledScreen<?> handledScreen && client.player != null) {
 				if (ScoutUtil.isScreenBlacklisted(screen)) {
 					// realistically no one is going to have a screen bigger than 2147483647 pixels

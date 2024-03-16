@@ -6,7 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
-import pm.c7.scout.ScoutConfig;
+import pm.c7.scout.config.ScoutConfig;
 import pm.c7.scout.item.BaseBagItem;
 
 public class BagSlot extends Slot {
@@ -38,7 +38,7 @@ public class BagSlot extends Slot {
 
 		if (stack.getItem() instanceof BlockItem blockItem) {
 			if (blockItem.getBlock() instanceof ShulkerBoxBlock)
-				return enabled && inventory != null && ScoutConfig.CONFIG.allowShulkers.value();
+				return enabled && inventory != null && ScoutConfig.allowShulkers;
 		}
 
 		return enabled && inventory != null;
@@ -65,11 +65,6 @@ public class BagSlot extends Slot {
 			this.inventory.setStack(this.index, stack);
 			this.markDirty();
 		}
-	}
-
-	@Override
-	public void setStackByPlayer(ItemStack stack) {
-		this.setStack(stack);
 	}
 
 	@Override

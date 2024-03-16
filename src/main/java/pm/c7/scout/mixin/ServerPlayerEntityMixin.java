@@ -7,7 +7,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.GameRules;
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -39,13 +39,6 @@ public class ServerPlayerEntityMixin {
 					slot.setInventory(null);
 					slot.setEnabled(false);
 				}
-
-				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-				packet.writeBoolean(false);
-				packet.writeInt(0);
-				packet.writeItemStack(backStack);
-
-				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
 			}
 
 			ItemStack leftPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, false);
@@ -60,13 +53,6 @@ public class ServerPlayerEntityMixin {
 					slot.setInventory(null);
 					slot.setEnabled(false);
 				}
-
-				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-				packet.writeBoolean(false);
-				packet.writeInt(0);
-				packet.writeItemStack(leftPouchStack);
-
-				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
 			}
 
 			ItemStack rightPouchStack = ScoutUtil.findBagItem(player, BagType.POUCH, true);
@@ -81,14 +67,10 @@ public class ServerPlayerEntityMixin {
 					slot.setInventory(null);
 					slot.setEnabled(false);
 				}
-
-				PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
-				packet.writeBoolean(false);
-				packet.writeInt(1);
-				packet.writeItemStack(rightPouchStack);
-
-				ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
 			}
+
+			PacketByteBuf packet = new PacketByteBuf(Unpooled.buffer());
+			ServerPlayNetworking.send(player, ScoutNetworking.ENABLE_SLOTS, packet);
 		}
 	}
 }

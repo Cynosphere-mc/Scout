@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "scout",
+  "version": "${version}",
+
+  "name": "Scout",
+  "description": "A mod focused on \"physically\" extending the inventory (adding slots) through wearing various types of bags.",
+  "authors": ["Cynosphere"],
+  "contact": {
+    "sources": "https://gitdab.com/Cynosphere-mc/Scout"
+  },
+
+  "license": "MIT",
+  "icon": "assets/scout/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": ["pm.c7.scout.Scout"],
+    "client": ["pm.c7.scout.client.ScoutClient"],
+    "emi": ["pm.c7.scout.client.compat.ScoutEmiPlugin"]
+  },
+  "mixins": ["scout.mixins.json"],
+
+  "depends": {
+    "fabric": ">=${fabric_version}",
+    "minecraft": ">=${minecraft_version}",
+    "trinkets": ">=${trinkets_version}",
+    "lib39-core": ">=${lib39_version}",
+    "lib39-dessicant": ">=${lib39_version}"
+  },
+  "recommends": {
+    "emi": ">=${emi_version}"
+  },
+  "breaks": {
+    "infinitory": "*",
+    "biginv": "*",
+    "extrainv": "*",
+    "inventory_backpack": "*",
+    "realistic-inventory": "*",
+    "inventorymod": "*"
+  }
+}

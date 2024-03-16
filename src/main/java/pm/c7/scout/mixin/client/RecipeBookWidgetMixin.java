@@ -3,7 +3,7 @@ package pm.c7.scout.mixin.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.recipe.book.RecipeBookWidget;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
