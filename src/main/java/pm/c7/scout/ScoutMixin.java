@@ -37,7 +37,7 @@ public class ScoutMixin extends AutoMixin {
 			var params = decodeAnnotationParams(an);
 			Type type = (Type)params.get("value");
 			try {
-				transformers.put(name, (ClassNodeTransformer) Class.forName(type.getClassName()).newInstance());
+				transformers.put(name, (ClassNodeTransformer) Class.forName(type.getClassName()).getDeclaredConstructor().newInstance());
 			} catch (Exception e) {
 				LOGGER.error("Transformer class for mixin {} not found", name, e);
 			}
