@@ -220,6 +220,16 @@ public class BaseBagItem extends TrinketItem {
 		}
 	}
 
+	@Override
+	public void tick(ItemStack stack, SlotReference slot, LivingEntity entity) {
+		var inv = getInventory(stack);
+
+		for (int i = 0; i < inv.size(); i++) {
+			var invStack = inv.getStack(i);
+			invStack.inventoryTick(entity.getWorld(), entity, i, false);
+		}
+	}
+
 	public enum BagType {
 		SATCHEL,
 		POUCH
