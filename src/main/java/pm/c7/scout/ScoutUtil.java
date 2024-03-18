@@ -3,11 +3,6 @@ package pm.c7.scout;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.BeaconScreen;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.gui.screen.ingame.MerchantScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -129,21 +124,5 @@ public class ScoutUtil {
 		out.addAll(scoutScreenHandler.scout$getLeftPouchSlots());
 		out.addAll(scoutScreenHandler.scout$getRightPouchSlots());
 		return out;
-	}
-
-	public static @Nullable PlayerScreenHandler getPlayerScreenHandler() {
-		var client = MinecraftClient.getInstance();
-		if (client != null && client.player != null) {
-			return client.player.playerScreenHandler;
-		}
-
-		return null;
-	}
-
-	// FIXME: registry system for mods to register their own blacklisted screens
-	public static boolean isScreenBlacklisted(Screen screen) {
-		return screen instanceof CreativeInventoryScreen
-				|| screen instanceof MerchantScreen // FIXME: needs repositioning
-				|| screen instanceof BeaconScreen; // FIXME: needs repositioning
 	}
 }

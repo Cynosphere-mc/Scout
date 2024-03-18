@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import pm.c7.scout.ScoutMixin.Transformer;
 import pm.c7.scout.ScoutUtil;
@@ -23,18 +22,6 @@ import pm.c7.scout.ScoutUtil;
 @Mixin(value = ScreenHandler.class, priority = 950)
 @Transformer(ScreenHandlerTransformer.class)
 public abstract class ScreenHandlerMixin {
-	@Inject(method = "getSlot", at = @At("HEAD"), cancellable = true)
-	public void scout$fixGetSlot(int index, CallbackInfoReturnable<Slot> cir) {
-		var playerScreenHandler = ScoutUtil.getPlayerScreenHandler();
-		if (ScoutUtil.isBagSlot(index)) {
-			if (playerScreenHandler != null) {
-				cir.setReturnValue(ScoutUtil.getBagSlot(index, playerScreenHandler));
-			} else {
-				cir.setReturnValue(null);
-			}
-		}
-	}
-
 	@Inject(method = "internalOnSlotClick", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/screen/ScreenHandler;getCursorStack()Lnet/minecraft/item/ItemStack;", ordinal = 11), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
 	public void scout$fixDoubleClick(int slotIndex, int button, SlotActionType actionType, PlayerEntity player, CallbackInfo ci, PlayerInventory playerInventory, Slot slot3) {
 		var cursorStack = this.getCursorStack();
