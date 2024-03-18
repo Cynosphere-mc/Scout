@@ -18,9 +18,6 @@ import com.google.common.collect.Sets;
 import joptsimple.internal.Strings;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.font.TextHandler;
-import net.minecraft.text.StringVisitable;
-import net.minecraft.text.Style;
 
 import pm.c7.scout.ScoutUtil;
 
@@ -102,7 +99,6 @@ public class ScoutConfig {
 
 	public static String getSavedConfig() {
 		Map<String, List<String>> unparsed = Maps.newLinkedHashMap();
-		TextHandler wrapper = new TextHandler((point, style) -> 1);
 		for (Field field : ScoutConfig.class.getFields()) {
 			ConfigValue annot = field.getAnnotation(ConfigValue.class);
 			if (annot != null) {
@@ -113,9 +109,10 @@ public class ScoutConfig {
 				String commentText = "";
 				if (comment != null) {
 					commentText += "\t/**\n";
-					for (StringVisitable line : wrapper.wrapLines(comment.value(), 80, Style.EMPTY)) {
+					var lines = comment.value().split("\\n");
+					for (String line : lines) {
 						commentText += "\t * ";
-						commentText += line.getString();
+						commentText += line;
 						commentText += "\n";
 					}
 					commentText += "\t */\n";
