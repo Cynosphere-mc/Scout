@@ -60,7 +60,7 @@ public class BagSlot extends Slot {
 	}
 
 	@Override
-	public void setStack(ItemStack stack) {
+	public void setStackNoCallbacks(ItemStack stack) {
 		if (enabled && this.inventory != null) {
 			this.inventory.setStack(this.index, stack);
 			this.markDirty();

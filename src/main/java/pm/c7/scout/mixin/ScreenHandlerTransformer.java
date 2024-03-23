@@ -27,9 +27,6 @@ public class ScreenHandlerTransformer implements ClassNodeTransformer {
 		var LSlot = L(Slot);
 
 		var DefaultedList = slash(resolver.mapClassName(namespace, "net.minecraft.class_2371"));
-		//var LDefaultedList = L(DefaultedList);
-
-		//var slots = resolver.mapFieldName(namespace, name, "field_7761", LDefaultedList);
 
 		int ordinal = 0;
 
