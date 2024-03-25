@@ -6,6 +6,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
+import pm.c7.scout.ScoutUtil;
 import pm.c7.scout.config.ScoutConfig;
 import pm.c7.scout.item.BaseBagItem;
 
@@ -35,6 +36,10 @@ public class BagSlot extends Slot {
 	public boolean canInsert(ItemStack stack) {
 		if (stack.getItem() instanceof BaseBagItem)
 			return false;
+
+		if (stack.isIn(ScoutUtil.TAG_ITEM_BLACKLIST)) {
+			return false;
+		}
 
 		if (stack.getItem() instanceof BlockItem blockItem) {
 			if (blockItem.getBlock() instanceof ShulkerBoxBlock)

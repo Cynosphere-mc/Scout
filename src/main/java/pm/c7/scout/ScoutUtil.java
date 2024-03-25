@@ -3,11 +3,15 @@ package pm.c7.scout;
 import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketComponent;
 import dev.emi.trinkets.api.TrinketsApi;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
@@ -25,7 +29,9 @@ import java.util.Optional;
 public class ScoutUtil {
 	public static final Logger LOGGER = LoggerFactory.getLogger("Scout");
 	public static final String MOD_ID = "scout";
-	public static final Identifier SLOT_TEXTURE = new Identifier("scout", "textures/gui/slots.png");
+	public static final Identifier SLOT_TEXTURE = new Identifier(MOD_ID, "textures/gui/slots.png");
+
+	public static final TagKey<Item> TAG_ITEM_BLACKLIST = TagKey.of(RegistryKeys.ITEM, new Identifier(MOD_ID, "blacklist"));
 
 	public static final int MAX_SATCHEL_SLOTS = 18;
 	public static final int MAX_POUCH_SLOTS = 6;
