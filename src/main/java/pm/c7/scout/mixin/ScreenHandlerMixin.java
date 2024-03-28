@@ -9,6 +9,7 @@ import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.util.collection.DefaultedList;
 
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -45,6 +46,7 @@ public abstract class ScreenHandlerMixin {
 		}
 	}
 
+	@Dynamic("Workaround for Debugify. Other calls are modified via the attached transformer class.")
 	@Redirect(method = "internalOnSlotClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;get(I)Ljava/lang/Object;", ordinal = 5))
 	public Object scout$fixSlotIndexing(DefaultedList<Slot> self, int index, int slotIndex, int button, SlotActionType actionType, PlayerEntity player) {
 		if (ScoutUtil.isBagSlot(index)) {

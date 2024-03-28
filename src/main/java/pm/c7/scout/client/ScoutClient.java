@@ -5,12 +5,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityFeatureRendererRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.TooltipComponentCallback;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.collection.DefaultedList;
 
@@ -120,83 +119,114 @@ public class ScoutClient implements ClientModInitializer {
 					return;
 				}
 
-				var handledScreenAccessor = (HandledScreenAccessor) handledScreen;
+				var handledScreenAccessor = (HandledScreenAccessor<?>) handledScreen;
+				ScreenHandler handler = handledScreenAccessor.getHandler();
 
-				var sx = handledScreenAccessor.getX();
-				var sy = handledScreenAccessor.getY();
-				var sw = handledScreenAccessor.getBackgroundWidth();
-				var sh = handledScreenAccessor.getBackgroundHeight();
+				var playerInventory = client.player.getInventory();
+
+				int x = 0;
+				int y = 0;
 
 				// satchel
-				int x = sx;
-				int y = sy + sh + 2;
+				var _hotbarSlot1 = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 0).findFirst();
+				Slot hotbarSlot1 = _hotbarSlot1.isPresent() ? _hotbarSlot1.get() : null;
+				if (hotbarSlot1 != null) {
+					if (!hotbarSlot1.isEnabled()) {
+						for (int i = 0; i < ScoutUtil.MAX_SATCHEL_SLOTS; i++) {
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.SATCHEL_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(Integer.MAX_VALUE);
+								slot.setY(Integer.MAX_VALUE);
+							}
+						}
+					} else {
+						x = hotbarSlot1.x;
+						y = hotbarSlot1.y + 27;
 
-				if (screen instanceof GenericContainerScreen || screen instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+						for (int i = 0; i < ScoutUtil.MAX_SATCHEL_SLOTS; i++) {
+							if (i % 9 == 0) {
+								x = hotbarSlot1.x;
+							}
 
-				for (int i = 0; i < ScoutUtil.MAX_SATCHEL_SLOTS; i++) {
-					if (i % 9 == 0) {
-						x = sx + 8;
-					}
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.SATCHEL_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(x);
+								slot.setY(y);
+							}
 
-					BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.SATCHEL_SLOT_START - i, client.player.playerScreenHandler);
-					if (slot != null) {
-						slot.setX(x - sx);
-						slot.setY(y - sy);
-					}
+							x += 18;
 
-					x += 18;
-
-					if ((i + 1) % 9 == 0) {
-						y += 18;
+							if ((i + 1) % 9 == 0) {
+								y += 18;
+							}
+						}
 					}
 				}
 
 				// left pouch
-				x = sx + 8;
-				y = (sy + sh) - 100;
+				var _topLeftSlot = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 9).findFirst();
+				Slot topLeftSlot = _topLeftSlot.isPresent() ? _topLeftSlot.get() : null;
+				if (topLeftSlot != null) {
+					if (!topLeftSlot.isEnabled()) {
+						for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.LEFT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(Integer.MAX_VALUE);
+								slot.setY(Integer.MAX_VALUE);
+							}
+						}
+					} else {
+						x = topLeftSlot.x;
+						y = topLeftSlot.y - 18;
 
-				if (screen instanceof GenericContainerScreen || screen instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+						for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
+							if (i % 3 == 0) {
+								x -= 18;
+								y += 54;
+							}
 
-				for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
-					if (i % 3 == 0) {
-						x -= 18;
-						y += 54;
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.LEFT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(x);
+								slot.setY(y);
+							}
+
+							y -= 18;
+						}
 					}
-
-					BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.LEFT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
-					if (slot != null) {
-						slot.setX(x - sx);
-						slot.setY(y - sy);
-					}
-
-					y -= 18;
 				}
 
 				// right pouch
-				x = sx + sw - 24;
-				y = (sy + sh) - 100;
+				var _topRightSlot = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 17).findFirst();
+				Slot topRightSlot = _topRightSlot.isPresent() ? _topRightSlot.get() : null;
+				if (topRightSlot != null) {
+					if (!topLeftSlot.isEnabled()) {
+						for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.RIGHT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(Integer.MAX_VALUE);
+								slot.setY(Integer.MAX_VALUE);
+							}
+						}
+					} else {
+						x = topRightSlot.x;
+						y = topRightSlot.y - 18;
 
-				if (screen instanceof GenericContainerScreen || screen instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+						for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
+							if (i % 3 == 0) {
+								x += 18;
+								y += 54;
+							}
 
-				for (int i = 0; i < ScoutUtil.MAX_POUCH_SLOTS; i++) {
-					if (i % 3 == 0) {
-						x += 18;
-						y += 54;
+							BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.RIGHT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
+							if (slot != null) {
+								slot.setX(x);
+								slot.setY(y);
+							}
+
+							y -= 18;
+						}
 					}
-
-					BagSlot slot = (BagSlot) ScoutUtil.getBagSlot(ScoutUtil.RIGHT_POUCH_SLOT_START - i, client.player.playerScreenHandler);
-					if (slot != null) {
-						slot.setX(x - sx);
-						slot.setY(y - sy);
-					}
-
-					y -= 18;
 				}
 			}
 		});

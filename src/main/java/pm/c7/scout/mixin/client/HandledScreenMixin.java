@@ -4,10 +4,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
-import net.minecraft.client.gui.screen.ingame.ShulkerBoxScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -43,54 +41,58 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	protected int backgroundWidth;
 	@Shadow
 	protected int backgroundHeight;
+	@Shadow
+	protected T handler;
 
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;drawBackground(Lnet/minecraft/client/gui/DrawContext;FII)V"))
 	private void scout$drawSatchelRow(DrawContext graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtilClient.isScreenBlacklisted(this)) {
+			var playerInventory = this.client.player.getInventory();
+
 			ItemStack backStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.SATCHEL, false);
 			if (!backStack.isEmpty()) {
 				BaseBagItem bagItem = (BaseBagItem) backStack.getItem();
 				int slots = bagItem.getSlotCount();
 
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+				var _hotbarSlot1 = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 0).findFirst();
+				Slot hotbarSlot1 = _hotbarSlot1.isPresent() ? _hotbarSlot1.get() : null;
+				if (hotbarSlot1 != null) {
+					int x = this.x + hotbarSlot1.x - 8;
+					int y = this.y + hotbarSlot1.y + 22;
 
-				int x = this.x;
-				int y = this.y + this.backgroundHeight - 3;
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-				if ((Object) this instanceof GenericContainerScreen || (Object) this instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 32, 176, 4);
+					y += 4;
 
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 32, 176, 4);
-				y += 4;
+					int u = 0;
+					int v = 36;
 
-				int u = 0;
-				int v = 36;
+					for (int slot = 0; slot < slots; slot++) {
+						if (slot % 9 == 0) {
+							x = this.x + hotbarSlot1.x - 8;
+							u = 0;
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 7, 18);
+							x += 7;
+							u += 7;
+						}
 
-				for (int slot = 0; slot < slots; slot++) {
-					if (slot % 9 == 0) {
-						x = this.x;
-						u = 0;
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 7, 18);
-						x += 7;
-						u += 7;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 18, 18);
+
+						x += 18;
+						u += 18;
+
+						if ((slot + 1) % 9 == 0) {
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 7, 18);
+							y += 18;
+						}
 					}
 
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 18, 18);
+					x = this.x + hotbarSlot1.x - 8;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 54, 176, 7);
 
-					x += 18;
-					u += 18;
-
-					if ((slot + 1) % 9 == 0) {
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, u, v, 7, 18);
-						y += 18;
-					}
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 				}
-
-				x = this.x;
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 54, 176, 7);
-
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 			}
 		}
 	}
@@ -98,70 +100,72 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;disableDepthTest()V", remap = false))
 	private void scout$drawPouchSlots(DrawContext graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		if (this.client != null && this.client.player != null && !ScoutUtilClient.isScreenBlacklisted(this)) {
+			var playerInventory = this.client.player.getInventory();
+
 			ItemStack leftPouchStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.POUCH, false);
 			if (!leftPouchStack.isEmpty()) {
 				BaseBagItem bagItem = (BaseBagItem) leftPouchStack.getItem();
 				int slots = bagItem.getSlotCount();
 				int columns = (int) Math.ceil(slots / 3);
 
-				int x = this.x;
-				int y = (this.y + this.backgroundHeight) - 29;
+				var _topLeftSlot = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 9).findFirst();
+				Slot topLeftSlot = _topLeftSlot.isPresent() ? _topLeftSlot.get() : null;
+				if (topLeftSlot != null) {
+					int x = this.x + topLeftSlot.x - 8;
+					int y = this.y + topLeftSlot.y + 53;
 
-				if ((Object) this instanceof GenericContainerScreen || (Object) this instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 18, 25, 7, 7);
-				for (int i = 0; i < columns; i++) {
-					x -= 11;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 11, 7);
-				}
-				if (columns > 1) {
-					for (int i = 0; i < columns - 1; i++) {
-						x -= 7;
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 7, 7);
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 18, 25, 7, 7);
+					for (int i = 0; i < columns; i++) {
+						x -= 11;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 11, 7);
 					}
-				}
-				x -= 7;
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 25, 7, 7);
-
-				x = this.x + 7;
-				y -= 54;
-				for (int slot = 0; slot < slots; slot++) {
-					if (slot % 3 == 0) {
-						x -= 18;
-						y += 54;
+					if (columns > 1) {
+						for (int i = 0; i < columns - 1; i++) {
+							x -= 7;
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 7, 7);
+						}
 					}
-					y -= 18;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 7, 18, 18);
-				}
+					x -= 7;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 25, 7, 7);
 
-				x -= 7;
-				y += 54;
-				for (int i = 0; i < 3; i++) {
-					y -= 18;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 7, 7, 18);
-				}
-
-				x = this.x;
-				y -= 7;
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 18, 0, 7, 7);
-				for (int i = 0; i < columns; i++) {
-					x -= 11;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 11, 7);
-				}
-				if (columns > 1) {
-					for (int i = 0; i < columns - 1; i++) {
-						x -= 7;
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 7, 7);
+					x = this.x + topLeftSlot.x - 1;
+					y -= 54;
+					for (int slot = 0; slot < slots; slot++) {
+						if (slot % 3 == 0) {
+							x -= 18;
+							y += 54;
+						}
+						y -= 18;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 7, 18, 18);
 					}
-				}
-				x -= 7;
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 0, 7, 7);
 
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+					x -= 7;
+					y += 54;
+					for (int i = 0; i < 3; i++) {
+						y -= 18;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 7, 7, 18);
+					}
+
+					x = this.x + topLeftSlot.x - 8;
+					y -= 7;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 18, 0, 7, 7);
+					for (int i = 0; i < columns; i++) {
+						x -= 11;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 11, 7);
+					}
+					if (columns > 1) {
+						for (int i = 0; i < columns - 1; i++) {
+							x -= 7;
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 7, 7);
+						}
+					}
+					x -= 7;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 0, 0, 7, 7);
+
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+				}
 			}
 
 			ItemStack rightPouchStack = ScoutUtil.findBagItem(this.client.player, BaseBagItem.BagType.POUCH, true);
@@ -170,64 +174,64 @@ public abstract class HandledScreenMixin<T extends ScreenHandler> extends Screen
 				int slots = bagItem.getSlotCount();
 				int columns = (int) Math.ceil(slots / 3);
 
-				int x = this.x + this.backgroundWidth - 7;
-				int y = (this.y + this.backgroundHeight) - 29;
+				var _topRightSlot = handler.slots.stream().filter(slot->slot.inventory.equals(playerInventory) && slot.getIndex() == 17).findFirst();
+				Slot topRightSlot = _topRightSlot.isPresent() ? _topRightSlot.get() : null;
+				if (topRightSlot != null) {
+					int x = this.x + topRightSlot.x + 17;
+					int y = this.y + topRightSlot.y + 53;
 
-				if ((Object) this instanceof GenericContainerScreen || (Object) this instanceof ShulkerBoxScreen) {
-					y -= 1;
-				}
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 25, 25, 7, 7);
-				x += 7;
-				for (int i = 0; i < columns; i++) {
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 11, 7);
-					x += 11;
-				}
-				if (columns > 1) {
-					for (int i = 0; i < columns - 1; i++) {
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 7, 7);
-						x += 7;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 25, 25, 7, 7);
+					x += 7;
+					for (int i = 0; i < columns; i++) {
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 11, 7);
+						x += 11;
 					}
-				}
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 25, 7, 7);
-
-				x = this.x + this.backgroundWidth - 25;
-				y -= 54;
-				for (int slot = 0; slot < slots; slot++) {
-					if (slot % 3 == 0) {
-						x += 18;
-						y += 54;
+					if (columns > 1) {
+						for (int i = 0; i < columns - 1; i++) {
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 25, 7, 7);
+							x += 7;
+						}
 					}
-					y -= 18;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 7, 18, 18);
-				}
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 25, 7, 7);
 
-				x += 18;
-				y += 54;
-				for (int i = 0; i < 3; i++) {
-					y -= 18;
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 7, 7, 18);
-				}
-
-				x = this.x + this.backgroundWidth - 7;
-				y -= 7;
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 25, 0, 7, 7);
-				x += 7;
-				for (int i = 0; i < columns; i++) {
-					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 11, 7);
-					x += 11;
-				}
-				if (columns > 1) {
-					for (int i = 0; i < columns - 1; i++) {
-						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 7, 7);
-						x += 7;
+					x = this.x + topRightSlot.x - 1;
+					y -= 54;
+					for (int slot = 0; slot < slots; slot++) {
+						if (slot % 3 == 0) {
+							x += 18;
+							y += 54;
+						}
+						y -= 18;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 7, 18, 18);
 					}
-				}
-				graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 0, 7, 7);
 
-				graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+					x += 18;
+					y += 54;
+					for (int i = 0; i < 3; i++) {
+						y -= 18;
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 7, 7, 18);
+					}
+
+					x = this.x + topRightSlot.x + 17;
+					y -= 7;
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 25, 0, 7, 7);
+					x += 7;
+					for (int i = 0; i < columns; i++) {
+						graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 11, 7);
+						x += 11;
+					}
+					if (columns > 1) {
+						for (int i = 0; i < columns - 1; i++) {
+							graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 7, 0, 7, 7);
+							x += 7;
+						}
+					}
+					graphics.drawTexture(ScoutUtil.SLOT_TEXTURE, x, y, 32, 0, 7, 7);
+
+					graphics.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+				}
 			}
 		}
 	}
